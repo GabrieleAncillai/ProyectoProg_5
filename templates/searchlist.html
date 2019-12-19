@@ -1,0 +1,45 @@
+<html>
+	<head>
+		<title>Búsqueda de estudiante</title>
+		<link rel="stylesheet" type="text/css"  href="{{url_for('static',filename='assets/style.css')}}" >
+	</head>
+<body>
+
+	<!-- Logo de la universidad -->
+	<img src="static/images/LogoUIP.png">
+
+	<h1>----- Búsqueda -----</h1>
+	<hr>
+	{% if all[0] %}
+	<h3>Resultados de la Búsqueda: </h3>
+	<table>
+	    <tr id="row">
+	    	<td class="status">Estado</td>
+	    	<td class="name">Nombre</td>
+	    	<td class="identification">Cédula / Pasaporte</td>
+	    	<td class="carreer">Carrera</td>
+	    	<td class="fecha">Fecha</td>
+			<td class="hora">Hora</td>
+		<td class="func">Borrar</td>
+		<td class="func">Editar</td>
+	    </tr>
+		{% for Students in all %}
+		<tr class="datas">
+			<td><a href="./done?_id={{ Students['_id'] }}"><input type="image" src="static/images/{{Students['done']}}.png" alt="Submit ME"></a></td>
+			<td class="name">{{ Students["name"] }}</td>
+			<td class="identification">{{ Students["identification"] }}</td>
+			<td class="carreer">{{ Students["carreer"] }}</td>
+			<td class="fecha">{{ Students["fecha"] }}</td>
+			<td class="hora">{{ Students["hora"] }}</td>
+			<td class="func1"><a href="./remove?_id={{ Students['_id'] }}"><button type="submit">Borrar</button></a></td>
+			<td class="func1"><a href="./update?_id={{ Students['_id'] }}"><button type="submit">Editar</button></a></td>
+		</tr>
+		{% endfor %}
+	{% else %}
+		<h4>No se encontraron resultados.</h4>
+	{% endif %}
+	</table>
+	<hr>
+	<a href="/">Regregar a la Lista de Participantes</a>
+</body>
+</html>

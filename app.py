@@ -15,18 +15,16 @@ from pymongo import MongoClient
 
 app = Flask(__name__)
 
-title = "Proyecto Programación 4"
+# title = "Proyecto Programación 5"
 
 client = MongoClient("mongodb://127.0.0.1:27017")  # host uri
+# This is still not working
 # client = MongoClient("mongodb+srv://GabrieleAncillai:Gabriele25@ancillai-bay7d.mongodb.net/test?retryWrites=true&w=majority")
-db = client.ProyectICD  # Select the database
+db = client.Prog_5  # Select the database
 
 # Collections
 Users = db.Users  # collection Usuarios
-Events = db.Events  # collection Eventos
-
-# StateTree
-CurrentUser = {}
+Accounts = db.Accounts  # collection Eventos
 
 
 def redirect_url():
@@ -45,70 +43,46 @@ def render_register():
     return render_template('register.html')
 
 
-@app.route("/acceso")
+@app.route("/login")
 def render_login():
-    return render_template('login.html', incorrect=0)
+    return render_template('login.html', ERROR=False)
 
 
 # ------------------------------- Funciones de Registro y Login -------------------------------
-@app.route("/register", methods=['POST'])
+@app.route("/handleRegister", methods=['POST'])
 def register():
     # Creating a user
-    name = request.values.get("name")
-    identification = request.values.get("identification")
+    username = request.values.get("username")
     password = request.values.get("password")
     mail = request.values.get("mail")
-    gender = request.values.get("gender")
-    ambit = request.values.get("ambit")
-    faculty = request.values.get("faculty")
-
-    # --- dates and ages ---
-    birthday = request.values.get("birthday")
-    birthmonth = request.values.get("birthmonth")
-    birthyear = request.values.get("birthyear")
-    date = datetime.datetime.now()
-    year = int(date.strftime("%Y"))
-    month = int(date.strftime("%m"))
-    day = int(date.strftime("%d"))
-    if (year > int(birthyear) and month >= int(birthmonth) and day >= int(birthday)) or (
-            year > int(birthyear) and month > int(birthmonth) and day < int(birthday)):
-        age = year - int(birthyear)
-    else:
-        age = year - int(birthyear) - 1
-    # --- dates and ages ---
 
     Users.insert({
-        "name": name,
-        "identification": identification,
+        "username": username,
         "password": password,
-        "mail": mail,
-        "gender": gender,
-        "age": age,
-        "faculty": faculty,
-        "ambit": ambit
+        "mail": mail
     })
-    return redirect("/acceso")
+    return redirect("/login")
 
 
-@app.route("/login", methods=['GET'])
+@app.route("/handleLogin", methods=['GET'])
 def login():
-    ID = request.values.get("ID")
-    key = request.values.get("key")
+    ID = request.values.get("username")
+    key = request.values.get("password")
 
     # Comprobar que existe el usuario
-    DATA = Users.find_one({"identification": ID, "password": key})
+    DATA = Users.find_one({"username": ID, "password": key})
     if DATA != None:
-        session["identification"] = DATA["identification"]
+        session["username"] = DATA["username"]
         app.secret_key = DATA["password"]
-        MyUser = Users.find({"identification": session['identification'], "password": app.secret_key})
         print(session)
-        action = render_template("home.html", MyUser=MyUser, a1="active", title="Inicio")
+        action = redirect("/home")
     else:
         # ERROR
         print("ERROR")
-        action = render_template("login.html", errorType="ERROR")
-    
+        action = render_template("login.html", ERROR=True)
+
     return action
+
 
 @app.route("/logout")
 def logout():
@@ -116,217 +90,98 @@ def logout():
     # Delete current session
     session = None
     app.secret_key = ""
-    
+
     return redirect("/acceso")
 
 # ------------------------------- Componentes de tabla de opciones superior -------------------------------
-@app.route("/home")  # Home for Students
+@app.route("/home", methods=['GET'])  # Home
 def home():
-    MyUser = Users.find(
-        {"identification": session['identification'], "password": app.secret_key})
-    return render_template('home.html', a1="active", title="Inicio", MyUser=MyUser)
+    MyUser = list(Users.find({"username": session['username'], "password": app.secret_key}))
+    for user in MyUser:
+        AllAccounts = list(Accounts.find({ "UserID": user["username"] + user["password"] }))
 
+    print(AllAccounts)
+    
+    return render_template('home.html', AllAccounts=AllAccounts, MyUser=MyUser)
 
-@app.route("/home/events")  # Events for Students
-def Stud_events():
-    MyUser = Users.find({"identification": session['identification'], "password": app.secret_key})
-    all_l = Events.find({"state": "avalible"})
-    title = "Eventos"
-    a2 = "active"
-    return render_template('home.html', a2=a2, all=all_l, title=title, Users=MyUser)
+@app.route("/EditAccount")
+def EditAccount():
+    AccountID = request.values.get("AccountID")
+    Item = list(Accounts.find({"_id": ObjectId(AccountID)}))
+    print("AccountID: ", AccountID)
+    print("item: ", Item)
+    return render_template('EditAccount.html', Item=Item, AccountID=AccountID)
 
+# ------------------------------- ACCOUNTS ACTIONS -------------------------------
 
-@app.route("/home/account")  # Account Settings for Students
-def account():
-    MyUser = Users.find(
-        {"identification": session['identification'], "password": app.secret_key})
-    return render_template('home.html', a3="active", title="Configuración", MyUser=MyUser)
-
-
-@app.route("/menu")  # Home for Administrators
-def menu():
-    MyUser = Users.find(
-        {"identification": session['identification'], "password": app.secret_key})
-    return render_template('menu.html', a1="active", title="Administración", MyUser=MyUser)
-
-
-@app.route("/menu/events")  # Events for Administrators
-def Admin_events():
-    MyUser = Users.find(
-        {"identification": session['identification'], "password": app.secret_key})
-    all_l = Events.find()
-    title = "Eventos"
-    a2 = "active"
-    return render_template('menu.html', a2=a2, all=all_l, title=title, MyUser=MyUser)
-
-
-@app.route("/menu/QRCode", methods=['GET'])  # Events for Administrators
-def QRCodeScanner():
-    code = request.values.get("code")
-    all_l = Events.find()
-    ID = request.values.get("ID")
-    event_ID = request.values.get("event_ID")
-    event_plus_user = str(str(ID) + str(event_ID))
-    if code == event_plus_user:
-        Users.update({"_id": ObjectId(ID)}, {"$set": {event_ID: "in_event"}})
-    MyUser = Users.find(
-        {"identification": session['identification'], "password": app.secret_key})
-    title = "QRCodeScanner"
-    a3 = "active"
-    return render_template('menu.html', a3=a3, title=title, all=all_l, MyUser=MyUser)
-
-
-@app.route("/menu/stats", methods=['GET'])
-def stats():
-    #event_ID = request.values.get("event_ID")
-    FindMale = Users.find({"gender": "Male"})
-    FindFemale = Users.find({"gender": "Female"})
-    FindOther = Users.find({"gender": "Other"})
-    FindProf = Users.find({"ambit": "teacher"})
-    FindStudent = Users.find({"ambit": "student"})
-    FindCS = Users.find({"faculty": "Ciencias de la Salud"})
-    FindING = Users.find({"faculty": "Ingeniería, Arquitectura y Diseño"})
-    FindCA = Users.find(
-        {"faculty": "Ciencias Administrativas, Marítima y Portuaria"})
-    FindHT = Users.find({"faculty": "Hotelería Gastronomía y Turismo"})
-    all = Users.find()
-    m = 0
-    f = 0
-    o = 0
-    t = 0
-    s = 0
-    cs = 0
-    ing = 0
-    ca = 0
-    ht = 0
-    for all in FindMale:
-        if all['gender'] == 'Male':
-            m = m+1
-    for all in FindFemale:
-        if all['gender'] == 'Female':
-            f = f+1
-    for all in FindOther:
-        if all['gender'] == 'Other':
-            o = o+1
-    for all in FindProf:
-        if all['ambit'] == 'teacher':
-            t = t+1
-    for all in FindStudent:
-        if all['ambit'] == 'student':
-            s = s+1
-    for all in FindCS:
-        if all['faculty'] == 'Ciencias de la Salud':
-            cs = cs+1
-    for all in FindING:
-        if all['faculty'] == 'Ingeniería, Arquitectura y Diseño':
-            ing = ing+1
-    for all in FindCA:
-        if all['faculty'] == 'Ciencias Administrativas, Marítima y Portuaria':
-            ca = ca+1
-    for all in FindHT:
-        if all['faculty'] == 'Hotelería Gastronomía y Turismo':
-            ht = ht+1
-    return render_template('reportes.html', m=m, f=f, o=o, t=t, s=s, cs=cs, ing=ing, ca=ca, ht=ht, all=all)
-
-
-# ------------------------------- Condition Done or Undone -------------------------------
-@app.route("/eventAvalible")
-def eventAvalible():
-    # Avalible or not
-    ID = request.values.get("ID")
-    task = Events.find({"_id": ObjectId(ID)})
-    if task[0]['state'] == "avalible":
-        Events.update({"_id": ObjectId(ID)}, {"$set": {"state": "unavalible"}})
-    else:
-        Events.update({"_id": ObjectId(ID)}, {"$set": {"state": "avalible"}})
-    return redirect(redirect_url())
-
-
-# ------------------------------- EVENTS -------------------------------
-@app.route("/assistEvent", methods=['GET', 'POST'])
-def assistEvent():
-    # Assisting an Event
-    ID = request.values.get("ID")
-    event_ID = request.values.get("event_ID")
-    Users.update({"_id": ObjectId(ID)}, {"$set": {event_ID: "signed"}})
-    event_plus_user = str(str(ID) + str(event_ID))
-    imgFile = event_plus_user + '.png'
-
-    # Makes QRCode with ID parameters
-    qr = qrcode.make(event_plus_user)
-    qr.save(imgFile)
-
-    return redirect("/home/events")
-
-
-@app.route("/addEvent", methods=['POST'])
-def addEvent():
-    # Adding an Event
-    name = request.values.get("name")
+@app.route("/AddAccount", methods=['POST'])
+def AddAccount():
+    # Adding an Account
+    title = request.values.get("title")
     details = request.values.get("details")
-    date = request.values.get("date")
+    image = request.values.get("image")
+    _type = request.values.get("_type")
+    username = request.values.get("username")
+    mail = request.values.get("mail")
+    password = request.values.get("password")
+    UserID = request.values.get("UserID")
 
-    Events.insert(
-        {"name": name,
-         "details": details,
-         "date": date,
-         "state": "unavalible",
-         "students_in": 0,
-         "students_went": 0,
-         "students_faculty": "",
-         "students_gender": "",
-         "students_age": 0})
-    return redirect("/menu/events")
+    Accounts.insert({
+        "title": title,
+        "details": details,
+        "image": image,
+        "_type": _type,
+        "username": username,
+        "mail": mail,
+        "password": password,
+        "UserID": UserID
+    })
+
+    return redirect("/home")
 
 
-@app.route("/removeEvent")
-def removeEvent():
+@app.route("/RemoveAccount")
+def removeAccount():
     # Deleting a Task with various references
     ID = request.values.get("ID")
-    Events.remove({"_id": ObjectId(ID)})
-    return redirect("/menu/events")
+    Accounts.remove({"_id": ObjectId(ID)})
+    return redirect("/home")
 
-
-@app.route("/updateEvent")
-def updateEvent():
-    ID = request.values.get("ID")
-    task = Events.find({"_id": ObjectId(ID)})
-    title = "Actualizar"
-    return render_template('updateEvent.html', tasks=task, title=title)
-
-
-@app.route("/updateTaskEvent", methods=['POST'])
-def updateTaskEvent():
+@app.route("/UpdateAccount", methods=['POST'])
+def UpdateAccount():
     # Updating a Task with various references
-    name = request.values.get("name")
+    AccountID = request.values.get("AccountID")
+    title = request.values.get("title")
     details = request.values.get("details")
-    date = request.values.get("date")
-    state = request.values.get("state")
-    ID = request.values.get("ID")
-    Events.update({"_id": ObjectId(ID)},
-                  {"name": name,
-                   "details": details,
-                   "date": date,
-                   "state": state,
-                   "students_in": 0,
-                   "students_went": 0,
-                   "students_faculty": "",
-                   "students_gender": "",
-                   "students_age": 0})
-    return redirect("/menu/events")
+    _type = request.values.get("_type")
+    image = request.values.get("image")
+    username = request.values.get("username")
+    mail = request.values.get("mail")
+    password = request.values.get("password")
+    UserID = session['username'] + app.secret_key
+    Accounts.update(
+        {"_id": ObjectId(AccountID)},
+        {
+            "title": title,
+            "details": details,
+            "image": image,
+            "_type": _type,
+            "username": username,
+            "mail": mail,
+            "password": password,
+            "UserID": UserID
+        }
+    )
+    return redirect("/home")
 
-
-@app.route("/searchEvent", methods=['GET'])
+@app.route("/SearchAccount", methods=['GET'])
 def searchEvent():
     # Searching a Task with various references
     key = request.values.get("key")
     refer = request.values.get("refer")
-    if key == "_id":
-        all_l = Events.find({refer: ObjectId(key)})
-    else:
-        all_l = Events.find({refer: key})
-    return render_template('searchlist.html', all=all_l, title=title)
+    AllAccounts = Accounts.find({refer: key})
+    return render_template('home.html', AllAccounts=AllAccounts, title=title)
 
 
 if __name__ == "__main__":
-    app.run(host='192.168.139.2')
+    app.run(host='')

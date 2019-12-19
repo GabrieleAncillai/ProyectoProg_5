@@ -1,168 +1,116 @@
 <!DOCTYPE html>
 <html>
+
 <head>
+    <title>MyAccounts</title>
     <meta charset="UTF-8">
-    <title>{{ title }}</title>
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
-          integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
-    <link rel="stylesheet" type="text/css" href="{{url_for('static',filename='assets/style.css')}}">
-    <link rel="stylesheet" type="text/css" href="{{url_for('static',filename='assets/emoji.css')}}">
+    <!-- Bootstrap core CSS -->
+    <link crossorigin="anonymous" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+        integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" rel="stylesheet">
+
+    <!-- Scripts -->
     <script src="{{ url_for('static',filename='assets/twemoji.min.js')}}"></script>
     <script src="{{ url_for('static',filename='assets/emoji.js')}}"></script>
-    <title>Inicio</title>
+
+    <!-- Styles -->
+    <style>
+        .bd-placeholder-img {
+            font-size: 1.125rem;
+            text-anchor: middle;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
+        }
+
+        @media (min-width: 768px) {
+            .bd-placeholder-img-lg {
+                font-size: 3.5rem;
+            }
+        }
+    </style>
 </head>
 
 <body style="background-color:#F3F9E6;">
-
-<div class="page-header" style="background-color:#3cd462; height:150px">
-    <div class="w3-container" align="right">
-        <a href="/logout" style="background-color:powderblue">Cerrar Sesión</a>
-    </div>
-    {% for Users in MyUser %}
-    <div class="container" style="height:0px">
-        <div class="Registro">
-            <h1 class="display-4" align="center" style="color:#FFF"><b>Bienvenido {{ Users["name"] }}</b></h1>
-        </div>
-    </div>
-    {% endfor %}
-</div>
-
-<!-- Lista del menu -->
-<ul>
-    <li><a href="/home" class="{{ a1 }}">Inicio</a></li>
-    <li><a href="/home/events" class="{{ a2 }}" title="Revisa los eventos que hay disponibles para ti!!">Eventos</a>
-    </li>
-    <li><a href="/home/account" class="{{ a3 }}" title="Personalización y ajustes">Cuenta</a></li>
-</ul>
-
-<!-- Condición para [INICIO] -->
-{% if a1 == "active" %}
-<div id="carrusel" class="carousel slide" data-ride="carousel" style="">
-    <div class="carousel-inner" role="listbox">
-        <div class="carousel-item active">
-            <img src="../static/images/nochetal.jpg" class="d-block w-50" alt="noche de talentos"
-                 style="margin: 0 auto">
-        </div>
-        <div class="carousel-item">
-            <img src="../static/images/semanaing.png" class="d-block w-50" alt="semana de la ingeniería"
-                 style="margin: 0 auto">
-            <div class="text-center" style="height:-10px">
-                <a href="#confirmacion" class="btn btn-info btn-lg" data-toggle="modal">¡Pre-Registrarme!</a>
-            </div>
-
-        </div>
-        <div class="carousel-item">
-            <img src="../static/images/banner_uip.png" class="d-block w-50" alt="banner uip" style="margin: 0 auto">
-        </div>
-    </div>
-    <a class="carousel-control-prev" href="#carrusel" role="button" data-slide="prev">
-        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-        <span class="sr-only">Anterior</span>
-    </a>
-    <a class="carousel-control-next" href="#carrusel" role="button" data-slide="next">
-        <span class="carousel-control-next-icon" aria-hidden="true"></span>
-        <span class="sr-only">Siguiente</span>
-    </a>
-</div>
-<div class="modal fade" id="confirmacion">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title">Confirmación de Preregistro</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body">
-                <p>¿Estas seguro que quieres pre-registrarte?</p>
-            </div>
-            <div class="modal-footer">
-                <button type="submit" class="btn btn-primary" id="guardar">Sí, estoy seguro.</button>
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
-            </div>
-        </div>
-    </div>
-</div>
-
-<!-- Condición para [EVENTOS] -->
-{% elif a2 == "active" %}
-<div style="margin: 40px">
-
-    <!-- Tabla de menu -->
-    <hr>
-    {% if all[0] %}
-    <div>
-        <form action="/searchEvent" method="GET">
-
-            <!-- Tabla para búsqueda rápida -->
-            <table class="none" id="close">
-                <tr>
-                    <td></td>
-                    <td></td>
-                    <td><big><b>Búsqueda rápida de evento:</b></big></td>
-                    <td><select name="refer" required>
-                        <option value="name">Nombre</option>
-                        <option value="date">Fecha</option>
-                    </select></td>
-                    <td><input name="key" placeholder="Palabra clave" size="15px" type="text"/></td>
-                    <td>
-                        <button type="submit">Buscar</button>
-                    </td>
-                </tr>
-            </table>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <ul class="navbar-nav mr-auto">
+            <li class="nav-item active">
+                <img src="../static/images/CompanyLogo.png" style="width: 32px; height: 32px;">
+            </li>
+            <li class="nav-item active">
+                <a title="Your accounts here!" class="nav-link" href="/home">My Accounts</a>
+            </li>
+        </ul>
+        <form class="form-inline my-2 my-lg-0" action="/SearchAccount">
+            <input class="form-control mr-sm-2" name="key" type="search" placeholder="Search" aria-label="Search">
+            <input type="text" name="refer" value="title" hidden>
+            <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
         </form>
+    </nav>
+
+    <div style="margin: 40px">
+
+        <!-- Tabla de menu -->
+        <hr>
+        {% if AllAccounts[0] %}
+        <!-- Encabezado de tabla de Evento -->
+        <b><big>Cuentas: <br /></big></b>
+        <br />
+        <table class="table table-striped table-dark">
+            <thead>
+                <tr id="row">
+                    <th class="bg-primary"></th>
+                    <th class="bg-primary">Account</th>
+                    <th class="bg-primary">Username</th>
+                    <th class="bg-primary">Mail</th>
+                    <th class="bg-primary">Password</th>
+                    <th class="bg-primary">Details</th>
+                    <th class="bg-primary">Edit</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- Tabla de Cuentas  -->
+                {% for Accounts in AllAccounts %}
+                <tr>
+                    <td class="bg-info"><img src="{{ Accounts['image'] }}" style="width: 64px; height: 64px;"></td>
+                    <td class="bg-info">{{ Accounts["title"] }}</td>
+                    <td class="bg-info">{{ Accounts["username"] }}</td>
+                    <td class="bg-info">{{ Accounts["mail"] }}</td>
+                    <td class="bg-info">{{ Accounts["password"] }}</td>
+                    <td class="bg-info">{{ Accounts["details"] }}</td>
+                    <td class="bg-info"><a class="list-group-item"
+                            href="/EditAccount?AccountID={{ Accounts['_id'] }}" methods="POST">
+                            <button type="submit">Edit</button>
+                        </a></td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+        {% else %}
+        <!-- Si no hay cuentas "No hay cuentas" -->
+        <br>
+        <p></p>
+        <h4>No Accounts Yet...</h4>
+        {% endif %}
+        <div
+            style="flex: none; position:absolute; justify-content: end; align-content: flex-end; align-items: flex-end; align-self:flex-end;">
+            <a class="list-group-item" href="/AddAccount" methods="POST">
+                <button class="btn-lg" type="submit">+</button>
+            </a>
+        </div>
     </div>
 
-    <!-- Encabezado de tabla de Evento -->
-    <b><big>--- Eventos Disponibles: ---<br/></big></b>
-    <br/>
-    <table class="table table-striped table-dark">
-        <thead>
-        <tr id="row">
-            <th class="name">Nombre del Evento</th>
-            <th class="details">Detalles</th>
-            <th class="date">Fecha</th>
-            <th class="func1">Inscripción</th>
-        </tr>
-        </thead>
-        <tbody>
-        <!-- Tabla de Eventos -->
-        {% for Events in all %}
-        {% for MyUser in Users %}
-        <tr>
-            <td class="name">{{ Events["name"] }}</td>
-            <td class="details">{{ Events["details"] }}</td>
-            <td class="date">{{ Events["date"] }}</td>
-            <td class="func1"><a href="/assistEvent?ID={{ MyUser['_id'] }}&event_ID={{ Events['_id'] }}" methods="POST">
-                <button type="submit">Inscribirme</button>
-            </a></td>
-        </tr>
-        {% endfor %}
-        {% endfor %}
-        </tbody>
-    </table>
-
-    <!-- Si no hay eventos existentes "No hay eventos" -->
-    {% else %}
-    <br>
-    <p></p>
-    <h4>No hay eventos...</h4>
-    {% endif %}
-</div>
-
-
-{% endif %}
-
-
-<script src="/static/js/bootstrap.js"></script>
-<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
+    <script src="/static/js/bootstrap.js"></script>
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
         integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
         crossorigin="anonymous"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
         integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
         crossorigin="anonymous"></script>
-<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
         integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
         crossorigin="anonymous"></script>
 </body>
+
 </html>

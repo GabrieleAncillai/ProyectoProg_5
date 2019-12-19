@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+    <meta charset="UTF-8">
+    <title>{{ title }}</title>
+    <!-- href="/static/assets/style.css"-->
+    <link crossorigin="anonymous" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+          integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" rel="stylesheet">
+    <link href="{{url_for('static',filename='assets/style.css')}}" rel="stylesheet" type="text/css">
+    <link href="{{url_for('static',filename='assets/emoji.css')}}" rel="stylesheet" type="text/css">
+    <script src="{{ url_for('static',filename='assets/twemoji.min.js')}}"></script>
+    <script src="{{ url_for('static',filename='assets/emoji.js')}}"></script>
+
+</head>
+
+<body>
+
+<div class="page-header" style="background-color:#3cd462; height:100px">
+    <div align="right" class="w3-container">
+        <a href="/acceso" style="background-color:powderblue">Cerrar Sesión</a>
+        <br>
+        <a href="/updateUser" style="background-color:powderblue">Editar Usuario</a>
+    </div>
+    {% for Users in MyUser %}
+    <div class="container" style="height:0px">
+        <div class="Registro">
+            <h1 class="display-4" align="center" style="color:#FFF"><b>Bienvenido {{ Users["name"] }}</b></h1>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+
+<!-- Lista del menu -->
+<ul>
+    <li><a class="{{ a1 }}" href="/menu">Inicio</a></li>
+    <li><a class="{{ a2 }}" href="/menu/events" title="Administra eventos de la UIP">Eventos</a></li>
+    <li><a class="{{ a3 }}" href="/menu/QRCode" title="Escanea códigos QR para ingresar estudiantes a un evento">QRCode</a></li>
+    <li><a class="{{ a4 }}" href="/menu/stats" title="Estadísticas de los eventos de la UIP">Estadísticas</a></li>
+</ul>
+
+<!-- Condición para [MENU] -->
+{% if a1 == "active" %}
+
+
+<!-- Condición para [EVENTOS] -->
+{% elif a2 == "active" %}
+<div style="margin: 40px">
+    <!-- Agregar Evento -->
+    <form action="/addEvent" method="POST">
+        <table class="none">
+            <tr>
+                <th width="250px"><b><big><label>Agregar Nuevo Evento:</label></big></b></th>
+            </tr>
+        </table>
+        <table class="none">
+            <tr>
+                <td width="185px"><br/><input name="name" placeholder="Nombre del Evento" required type="text"/></td>
+                <td width="185px"><br/><input name="details" placeholder="Detalles" required type="text"/></td>
+                <td width="185px"><br/><input name="date" placeholder="Fecha" required type="date"/></td>
+            </tr>
+        </table>
+        {% for Users in MyUser %}
+        <a hidden name="user" type="text">{{Users["username"]}}</a>
+        <a hidden name="password" type="text">{{Users["password"]}}</a>
+        {% endfor %}
+        <br/>
+        <button type="submit">Agregar Evento</button>
+    </form>
+
+    <!-- Tabla de menu -->
+    <hr>
+    {% if all[0] %}
+    <div>
+        <form action="/searchEvent" method="GET">
+
+            <!-- Tabla para búsqueda rápida -->
+            <table class="none" id="close">
+                <tr>
+                    <td></td>
+                    <td></td>
+                    <td><big><b>Búsqueda rápida de evento:</b></big></td>
+                    <td><select name="refer" required>
+                        <option value="name">Nombre</option>
+                        <option value="date">Fecha</option>
+                    </select></td>
+                    <td><input name="key" placeholder="Palabra clave" size="15px" type="text"/></td>
+                    <td>
+                        <button type="submit">Buscar</button>
+                    </td>
+                </tr>
+            </table>
+        </form>
+    </div>
+
+    <!-- Encabezado de tabla de Evento -->
+    <b><big>--- Lista de Eventos ---<br/></big></b>
+    <br/>
+    <table class="table table-striped table-dark">
+        <thead>
+        <tr id="row">
+            <th class="name">Nombre del Evento</th>
+            <th class="details">Detalles</th>
+            <th class="date">Fecha</th>
+            <th class="date">Estado</th>
+            <th class="func1">Remover</th>
+            <th class="func2">Modificar</th>
+        </tr>
+        </thead>
+        <tbody>
+        <!-- Tabla de Eventos -->
+        {% for Events in all %}
+        <tr>
+            <td class="name">{{ Events["name"] }}</td>
+            <td class="details">{{ Events["details"] }}</td>
+            <td class="date">{{ Events["date"] }}</td>
+            <td><a href="/eventAvalible?ID={{ Events['_id'] }}"><input alt="Submit ME" height="40px"
+                                                                       src="../static/images/{{ Events['state'] }}.png"
+                                                                       title="{{ Events['state'] }}"
+                                                                       type="image"
+                                                                       width="60px"></a></td>
+            <td class="func1"><a href="/removeEvent?ID={{ Events['_id'] }}">
+                <button type="submit">Borrar</button>
+            </a></td>
+            <td class="func2"><a href="/updateEvent?ID={{ Events['_id'] }}">
+                <button type="submit">Editar</button>
+            </a></td>
+        </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <!-- Si no hay eventos existentes "No hay eventos" -->
+    {% else %}
+    <br>
+    <p></p>
+    <h4>No hay eventos...</h4>
+    {% endif %}
+</div>
+
+<!-- Condición para [QRCodeScanner] -->
+{% elif a3 == "active" %}
+
+<form action="/menu/QRCode" method="GET">
+    {% for Events in all %}
+    {% for MyUser in Users %}
+
+    <div class="container" style="height:20px">
+        <input class="col-sm-3" id="ID"  type="text" value="{{ MyUser['_id'] }}" name="ID" hidden>
+        <input class="col-sm-3" id="event_ID" type="text" value="{{ Events['_id'] }}" name="event_ID" hidden>
+        <p class="text-left">
+        <p style="margin-left: 400px">
+        <p style="margin-left: 350px">
+            <label for="code">Código QR: &emsp; &emsp; </label>
+
+
+
+            <input class="col-sm-3" id="code" name="code" placeholder="Please put QR code" type="text">
+        </p></div>
+    <br/>
+    <p style="margin-left: 650px">
+    <button class="btn btn-primary" type="submit">Acceder</button>
+        </p>
+
+    {% endfor %}
+    {% endfor %}
+</form>
+
+{% endif %}
+
+
+</body>
+
+</html>

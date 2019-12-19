@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+          integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <script src="{{ url_for('static',filename='assets/twemoji.min.js')}}"></script>
+    <script src="{{ url_for('static',filename='assets/emoji.js')}}"></script>
+    <script src="http://code.jquery.com/jquery-2.1.4.min.js"></script>
+    <script src="http://code.highcharts.com/highcharts.js"></script>
+    <script src="http://code.highcharts.com/modules/exporting.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.js"></script>
+
+    <title>Reportes</title>
+</head>
+
+<body style="background-color:#F3F9E6;">
+<form>
+    <div class="jumbotron jumbotron-fluid" style="background-color:#3cd462">
+        <img src="../static/images/referencia-UIP-blanco-01.png" width="350" height="100" align="right">
+        <div class="container" style="height:20px;">
+            <div class="Acceder">
+                <h1 class="display-4" style="color:#FFF"><b>Reportes</b></h1>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col">
+            <canvas id="myChart"></canvas>
+            <div id="wrfergerf" class="chart-analyser">
+                <table class="table">
+                    <thead>
+                    <tr>
+                        <th scope="col">Ciencias de la Salud</th>
+                        <th scope="col">Ingeniería, Arquitectura y Diseño</th>
+                        <th scope="col">Cs Admin., Marítima y Portuaria</th>
+                        <th scope="col">Hotelería, Gastronomía y Turismo</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr>
+                        <td>{{cs}}</td>
+                        <td>{{ing}}</td>
+                        <td>{{ca}}</td>
+                        <td>{{ht}}</td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div class="col">
+            <canvas id="midona"></canvas>
+            <div id="erge5" class="chart-analyser">
+                <table class="table">
+                    <thead>
+                    <tr>
+                        <th scope="col">Masculino</th>
+                        <th scope="col">Femenino</th>
+                        <th scope="col">Otro</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr>
+                        <td>{{m}}</td>
+                        <td>{{f}}</td>
+                        <td>{{o}}</td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div class="w-100"></div>
+        <div class="col">
+            <canvas id="mipie"></canvas>
+            <div id="chart-analyser" class="analyser">
+                <table class="table">
+                    <thead>
+                    <tr>
+                        <th scope="col">Estudiante</th>
+                        <th scope="col">Profesor</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr>
+                        <td>{{s}}</td>
+                        <td>{{t}}</td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div class="col"><canvas id="mibarra"></canvas></div>
+    </div>
+</form>
+<script>
+    var ctx = document.getElementById('myChart').getContext('2d');
+    var myChart = new Chart(ctx, {
+    type: 'bar',
+    data: {
+    labels: ['Ciencias de la Salud', 'Ingeniería, Arquitectura y Diseño', 'Cs. Admin., Marítima y Portuaria', 'Hotelería, Gastronomía y Turismo'],
+    datasets: [{
+    label: 'Facultades',
+    data: [{{cs}}, {{ing}}, {{ca}}, {{ht}}],
+    backgroundColor: [
+    '#2AE235',
+    '#CF2AE2',
+    '#EEF731',
+    '#2AB8E2'
+    ],
+    borderColor: [
+    'rgba(255, 99, 132, 1)',
+    'rgba(54, 162, 235, 1)',
+    'rgba(255, 206, 86, 1)',
+    'rgba(75, 192, 192, 1)',
+    ],
+    borderWidth: 1
+    }]
+    },
+    options: {
+    scales: {
+    yAxes: [{
+    ticks: {
+    beginAtZero: true
+    }
+    }]
+    }
+    }
+    });
+</script>
+<script>
+    var ctx = document.getElementById('midona').getContext('2d');
+    var midona = new Chart(ctx, {
+    type: 'doughnut',
+    data: {
+    labels: ['Masculino', 'Femenino', 'Otro'],
+    datasets: [{
+    label: 'Géneros',
+    data: [{{m}}, {{f}}, {{o}}],
+    backgroundColor: [
+    '#2031AF',
+    '#F17DDE',
+    '#fb0505'
+    ],
+    borderColor: [
+    'rgba(255, 99, 132, 1)',
+    'rgba(54, 162, 235, 1)',
+    'rgba(255, 206, 86, 1)',
+    'rgba(75, 192, 192, 1)',
+    ],
+    borderWidth: 1
+    }]
+    },
+    options: {
+    scales: {
+    yAxes: [{
+    ticks: {
+    beginAtZero: true
+    }
+    }]
+    }
+    }
+    });
+</script>
+<script>
+    var ctx = document.getElementById('mipie').getContext('2d');
+    var mipie = new Chart(ctx, {
+    type: 'pie',
+    data: {
+    labels: ['Estudiantes', 'Profesores'],
+    datasets: [{
+    label: 'Roles',
+    data: [{{s}}, {{t}}],
+    backgroundColor: [
+    '#2AE235',
+    '#CF2AE2'
+    ],
+    borderColor: [
+    'rgba(255, 99, 132, 1)',
+    'rgba(54, 162, 235, 1)'
+    ],
+    borderWidth: 1
+    }]
+    },
+    options: {
+    scales: {
+    yAxes: [{
+    ticks: {
+    beginAtZero: true
+    }
+    }]
+    }
+    }
+    });
+</script>
+<script>
+    var ctx = document.getElementById('mibarra').getContext('2d');
+    var mibarra = new Chart(ctx, {
+    type: 'bar',
+    data: {
+    labels: ['En el evento', 'Sólo pre-registrados'],
+    datasets: [{
+    label: 'Progreso',
+    data: [12, 19],
+    backgroundColor: [
+    '#2AE235',
+    '#CF2AE2',
+    ],
+    borderColor: [
+    'rgba(255, 99, 132, 1)',
+    'rgba(54, 162, 235, 1)'
+    ],
+    borderWidth: 1
+    }]
+    },
+    options: {
+    scales: {
+    yAxes: [{
+    ticks: {
+    beginAtZero: true
+    }
+    }]
+    }
+    }
+    });
+</script>
+
+<script src="/static/js/bootstrap.js"></script>
+
+</body>
+</html>

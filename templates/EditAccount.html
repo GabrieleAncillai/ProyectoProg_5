@@ -1,0 +1,118 @@
+<!doctype html>
+<html>
+
+<head>
+    {% for item in Item %}
+    <title>Editing {{ item['title'] }}</title>
+    {% endfor %}
+    <meta charset="UTF-8">
+    <!-- Bootstrap core CSS -->
+    <link crossorigin="anonymous" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+        integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" rel="stylesheet">
+
+    <!-- Scripts -->
+    <script src="{{ url_for('static',filename='assets/twemoji.min.js')}}"></script>
+    <script src="{{ url_for('static',filename='assets/emoji.js')}}"></script>
+
+    <!-- Styles -->
+    <style>
+        .bd-placeholder-img {
+            font-size: 1.125rem;
+            text-anchor: middle;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
+        }
+
+        @media (min-width: 768px) {
+            .bd-placeholder-img-lg {
+                font-size: 3.5rem;
+            }
+        }
+    </style>
+</head>
+
+<body style="background-color:#F3F9E6;">
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <ul class="navbar-nav mr-auto">
+            <li class="nav-item active">
+                <img src="../static/images/CompanyLogo.png" style="width: 32px; height: 32px;">
+            </li>
+            <li class="nav-item active">
+                <a title="Your accounts here!" class="nav-link" href="/home">My Accounts</a>
+            </li>
+        </ul>
+        <form class="form-inline my-2 my-lg-0" action="/SearchAccount">
+            <input class="form-control mr-sm-2" name="key" type="search" placeholder="Search" aria-label="Search">
+            <input type="text" name="refer" value="title" hidden>
+            <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+        </form>
+    </nav>
+
+    <div class="container" style="margin-top: 50px;">
+        {% for item in Item %}
+
+        <!-- Formulario de Actualización de Evento -->
+        <form action="/UpdateAccount" method="POST">
+            <h3>Edit Account: {{ item['title'] }}</h3>
+            <input type="text" name="AccountID" value="{{ AccountID }}" hidden>
+            <!-- Tabla de actualización -->
+            <table class="table table-striped">
+                <tr>
+                    <td>Title:</td>
+                    <td><input type="text" style="width: 40vw;" name="title" value="{{ item['title'] }}" placeholder="{{ item['title'] }}">
+                    </td>
+                </tr>
+                <tr>
+                    <td>Details:</td>
+                    <td><input type="text" style="width: 40vw;" name="details" value="{{ item['details'] }}"
+                            placeholder="{{ item['details'] }}">
+                    </td>
+                </tr>
+                <tr>
+                    <td>Type:</td>
+                    <td>
+                        <select name="_type">
+                            <option value="SocialNetwork">Social Network</option>
+                            <option value="VideoGame">VideoGame</option>
+                            <option value="BankAccount">Bank Account</option>
+                            <option value="CloudStorage">Cloud Storage</option>
+                            <option value="Other">Other</option>
+                        </select>
+                    </td>
+                </tr>
+                <tr>
+                    <td>Image:</td>
+                    <td>
+                        <img src="{{ item['image'] }}" style="height: 64px; width: 64px;">
+                        <select name="image">
+                            <option value="../static/images/FacebookLogo.png">Facebook</option>
+                        </select>
+                    </td>
+                </tr>
+                <tr>
+                    <td>Username:</td>
+                    <td><input type="text" style="width: 40vw;" name="username" value="{{ item['username'] }}"
+                            placeholder="{{ item['username'] }}"></td>
+                </tr>
+                <tr>
+                    <td>Mail:</td>
+                    <td><input type="text" style="width: 40vw;" name="mail" value="{{ item['mail'] }}" placeholder="{{ item['mail'] }}">
+                    </td>
+                </tr>
+                <tr>
+                    <td>Password:</td>
+                    <td><input type="text" style="width: 40vw;" name="password" value="{{ item['password'] }}"
+                            placeholder="{{ item['password'] }}"></td>
+                </tr>
+            </table>
+            <button class="btn btn-primary" type="submit">Update</button>
+            <br />
+        </form>
+        <a href="/home" style="margin-top: 30px;">Return</a>
+        {% endfor %}
+    </div>
+</body>
+
+</html>

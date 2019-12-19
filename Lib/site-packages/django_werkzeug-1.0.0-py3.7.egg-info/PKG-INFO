@@ -1,0 +1,10 @@
+Metadata-Version: 1.0
+Name: django-werkzeug
+Version: 1.0.0
+Summary: Enhances Django runserver with Werkzeug.
+Home-page: http://github.com/joeyespo/django-werkzeug
+Author: Joe Esposito
+Author-email: joe@joeyespo.com
+License: MIT
+Description: UNKNOWN
+Platform: any

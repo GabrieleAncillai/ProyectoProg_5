@@ -1,0 +1,115 @@
+<!doctype html>
+<html>
+
+	<head>
+
+		<meta charset="UTF-8">
+		<title>{{title}}</title>
+		<!-- href="/static/assets/style.css"-->
+		<link rel="stylesheet" type="text/css"  href="{{url_for('static',filename='assets/style.css')}}" >
+		<link rel="stylesheet" type="text/css"  href="{{url_for('static',filename='assets/emoji.css')}}" >
+		<script src="{{ url_for('static',filename='assets/twemoji.min.js')}}"></script>  
+		<script src="{{ url_for('static',filename='assets/emoji.js')}}"></script>
+		
+	</head>
+
+	<!-- Cuerpo -->
+	<body>
+
+		<!-- Logo de la universidad -->
+		<img src="static/images/LogoUIP.png">
+
+		<!-- Tabla de menu -->
+		<ul>
+			<li><a href="/list" class="{{ a1 }}">Todos</a></li>
+			<li><a href="/list" class="{{ a1 }}">Todos</a></li>
+			<li><a href="/uncompleted" class="{{ a2 }}">Incompletos</a></li>
+			<li><a href="/completed" class="{{ a3 }}">Completados</a></li>
+			<li><a href="/stats" class="{{ a4 }}">Estadísticas</a></li>
+
+		</ul>
+
+		<!-- Agregar Participantes -->
+		<form action="/add" method="POST">
+			<table class="none">
+
+				<tr>
+					<td><b><big><label><br />Agregar un participante: </label></big></b></td>
+				</tr>
+				<tr>
+				<td><br /><input type="text" name="name" placeholder="Nombre completo" required/></td>
+				<td><br /><input type="text" name="identification" placeholder="Cédula / Pasaporte" required></td>
+				<td><select name="carreer" required>
+					<option value="Ingeniería en Sistemas">Ingeniería en Sistemas</option>
+					<option value="Ingeniería en Comercio">Ingeniería en Comercio</option>
+					<option value="Administración de empresas">Administración de empresas</option>
+					<option value="Artes Culinarias">Artes Culinarias</option>
+				</select>
+				<td><br /><button type="submit"> Inscribir </button></td>
+				</tr>
+			</table>
+		</form>
+
+		<!-- Tabla de menu -->
+		<hr>
+		{% if all[0] %}
+		<div>
+		<form action="/search"	method="GET" >
+
+			<!-- Tabla para búsqueda rápida -->
+			<table class="none" id="close">
+			<tr>
+			<td></td><td></td>
+			<td><big><b>Búsqueda rápida:</b></big></td>
+			<td><select name="refer" required>
+				<option value="name">Nombre</option>
+				<option value="identification">Cédula / Pasaporte</option>
+				<option value="carreer">Carrera</option>
+				<option value="fecha">Fecha</option>
+				<option value="hora">Hora</option>
+			</select></td>
+			<td><input type="text" name="key" placeholder="Palabra clave" size="15" /></td>
+			<td><button type="submit">Buscar</button></td>
+			</tr>
+			</table>
+		</form>
+		</div>
+
+		<!-- Tabla de Registro de los participantes -->
+		<b><big>Registro de Participantes<br /></big></b>
+		<br /><table>
+			<tr id="row">
+				<th class="status">Estado</th>
+				<th class="name">Nombre</th>
+				<th class="identification">Cédula / Pasaporte</th>
+				<th class="carreer">Carrera</th>
+				<th class="fecha">Fecha</th>
+				<th class="hora">Hora</th>
+			<th class="func1">Remover</th>
+			<th class="func2">Modificar</th>
+			</tr>
+
+		<!-- Tabla de participantes -->
+		{% for Students in all %}
+			<tr class="datas">
+				<td><a href="./done?_id={{Students['_id'] }}"><input type="image" src="static/images/{{Students['done']}}.png" alt="Submit ME"></a></td>
+				<td class="name">{{ Students["name"] }}</td>
+				<td class="identification">{{ Students["identification"] }}</td>
+				<td class="carreer">{{ Students["carreer"] }}</td>
+				<td class="fecha">{{ Students["fecha"] }}</td>
+				<td class="hora">{{ Students["hora"] }}</td>
+				<td class="func1"><a href="./remove?_id={{ Students['_id'] }}"><button type="submit">Borrar</button></a></td>
+				<td class="func1"><a href="./update?_id={{ Students['_id'] }}"><button type="submit">Editar</button></a></td>
+			</tr>
+		{% endfor %}
+		</table>
+
+		<!-- Si no hay participantes "No hay participantes registrados" -->
+		{% else %}
+			<br>
+			<p></p>
+			<h4>No hay participantes registrados</h4>
+		{% endif %}
+
+	</body>
+</html>

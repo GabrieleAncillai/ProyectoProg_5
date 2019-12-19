@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>MyAccounts</title>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="../static/assets/syles.css">
+    <link crossorigin="anonymous" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+        integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" rel="stylesheet">
+    <script src="{{ url_for('static',filename='assets/twemoji.min.js')}}"></script>
+    <script src="{{ url_for('static',filename='assets/emoji.js')}}"></script>
+</head>
+
+<body>
+    <!-- Función de registro -->
+    <form action="/handleRegister" method="POST">
+
+        <div id="container">
+            <div class="register">
+                <img class="center" src="../static/images/companyLogo.png" style="width: 100px; height: 100px;">
+                <div class="center">
+                    <h1 class="text-center" style="color:#FFF; font-family: Arial;"><b>Registro</b></h1>
+                </div>
+                <div class="center">
+                    <p>
+                        <label style="color:#FFF; font-family: Arial; font-size: large;">Nombre completo</label>
+                        <input name="username" class="Input" placeholder="Nombre y Apellido" required type="text">
+                    </p>
+                </div>
+                <div class="center">
+                    <p>
+                        <label style="color:#FFF; font-family: Arial; font-size: large;">Contraseña</label>
+                        <input name="password" class="Input" placeholder="Contraseña" required type="password">
+                    </p>
+                </div>
+                <div class="center">
+                    <p>
+                        <label style="color:#FFF; font-family: Arial; font-size: large;">Mail</label>
+                        <input name="mail" class="Input" placeholder="Mail" required type="email">
+                    </p>
+                </div>
+                <div class="center">
+                    <button type="submit" class="Button">Registrar</button>
+                </div>
+                <form action="/login">
+                    <div class="center" style="margin: 20px">
+                        <label>Ya tienes sesión?:</label>
+                        <button class="Button" type="submit">Acceder</button>
+                    </div>
+                </form>
+            </div>
+            <div class="backgroung">
+                <img src="../static/images/registerBG.jpg" style="width: 60vw; height: 100vh;">
+            </div>
+    </form>
+
+    <script src="/static/js/bootstrap.js"></script>
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
+        integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
+        crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
+        integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
+        crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
+        integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
+        crossorigin="anonymous"></script>
+</body>
+
+</html>
