@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+        <script src="{{ url_for('static',filename='assets/twemoji.min.js')}}"></script>
+		<script src="{{ url_for('static',filename='assets/emoji.js')}}"></script>
+        <title>Inicio de Sesión</title>
+    </head>
+
+    <body style="background-color:#F3F9E6;">
+    <form action="/login" method="GET">
+        <div class="jumbotron jumbotron-fluid" style="background-color:#3cd462">
+            <img src="../static/images/referencia-UIP-blanco-01.png" width="350" height="100" align="right">
+            <div class="container" style="height:20px;">
+                <div class="Acceder">
+                    <h1 class="display-4" style="color:#FFF"><b>Iniciar Sesión</b></h1>
+                </div>
+            </div>
+        </div>
+        <div class="container" style="height:20px">
+            <p class="text-left">
+                <p style="margin-left: 400px">
+            <p style="margin-left: 350px">
+                <label for="ID">Cédula/Pasaporte &emsp; &emsp;  </label>
+
+                    <input type="text" name="ID" class="col-sm-3" id="ID" placeholder="Identificación">
+        </p></div>
+
+            <p class="text-left" style="margin: 20px">
+                <p style="margin-left: 615px">
+        <p style="margin-left: 565px">
+                <label for="ipassword">Contraseña&emsp; &emsp; &emsp;  &emsp;&nbsp;&nbsp;   </label>
+                <input type="password" name="key" class="col-sm-2" id="ipassword" placeholder="Contraseña">
+
+            </p>
+
+            {% if incorrect == 1 %}
+            <div class="text-center">
+                <small style="color:red">
+                    Valores incorrectos o usuario inexistente
+                </small>
+            </div>
+            {% endif %}
+
+            <div class="text-center" style="margin: 20px">
+                <button type="submit" class="btn btn-primary btn-lg">Acceder</button>
+            </div>
+    </form>
+     <script src="/static/js/bootstrap.js"></script>
+    </body>
+</html>

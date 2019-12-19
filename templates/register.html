@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>UIP Registro</title>
+    <meta charset="UTF-8">
+    <link crossorigin="anonymous" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+        integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" rel="stylesheet">
+    <script src="{{ url_for('static',filename='assets/twemoji.min.js')}}"></script>
+    <script src="{{ url_for('static',filename='assets/emoji.js')}}"></script>
+</head>
+
+<body style="background-color:#d0d0d0;">
+
+    <!-- Función de registro -->
+    <form action="/register" method="POST">
+
+        <div class="jumbotron" style="background-color:#3cd462">
+            <img align="right" height="100" src="../static/images/referencia-UIP-blanco-01.png" width="350">
+            <div class="container" style="height:20px;">
+                <div class="Registro">
+                    <h1 class="display-4" style="color:#FFF"><b>Registro</b></h1>
+                </div>
+            </div>
+        </div>
+
+        <!-- Nombre y apellido -->
+
+        <div class="text-left" style="margin: 20px">
+            <p style="margin-left: 500px">
+                <label class="col-sm-2 col-form-label" for="formGroupExampleInput">Nombre completo</label>
+
+                <input class="col-sm-3" id="formGroupExampleInput" name="name" placeholder="Nombre y Apellido" required
+                    type="text">
+            </p>
+        </div>
+
+        <!-- Identificación -->
+        <div class="text-left" style="margin: 20px">
+            <p style="margin-left: 500px">
+                <label class="col-sm-2 col-form-label" for="formGroupExampleInput">Cédula/Pasaporte</label>
+
+                <input class="col-sm-3" id="ExampleInput" name="identification" placeholder="ID" required type="text">
+            </p>
+        </div>
+
+        <!-- Contraseña -->
+        <div class="text-left" style="margin: 20px">
+            <p style="margin-left: 520px">
+                <label for="inputPassword"> Contraseña &emsp; &emsp; &emsp; &emsp; </label>
+
+                <input aria-describedby="passwordHelpBlock" class="col-sm-3" id="inputPassword" name="password"
+                    placeholder="Contraseña" required type="password">
+                <small class="form-text text-muted" id="passwordHelpBlock">
+                    <i>Su contraseña debe contar con al menos 8 caracteres.</i>
+                </small>
+            </p>
+        </div>
+
+        <!-- Mail -->
+        <div class="text-left" style="margin: 20px">
+            <p style="margin-left: 500px">
+                <label class="col-sm-2 col-form-label" for="colFormLabel">Correo electrónico</label>
+
+                <input class="col-sm-3" id="colFormLabel" name="mail" placeholder="example@mail.com" required
+                    type="email">
+            </p>
+        </div>
+
+        <!-- Genero -->
+        <div class="text-left" style="margin: 20px">
+            <p style="margin-left: 520px">
+                <label class="col-form-label" for="colFormLabel">Genero &emsp; &emsp; &emsp; &emsp; &emsp; </label>
+                <select class="text-center" id="Sexo" name="gender">
+                    <option value="Male">Masculino</option>
+                    <option value="Female">Femenino</option>
+                    <option value="Other">Otro</option>
+                </select>
+            </p>
+        </div>
+
+        <!-- Fecha de Nacimiento -->
+        <div class="form-group text-left" style="margin: 20px">
+            <p style="margin-left: 520px">
+
+                <label class="col-form-label" for="colFormLabel">Día: </label>
+                <input class="col-form-label" max="31" min="1" name="birthday" type="number">
+                <label class="col-form-label" for="colFormLabel">Mes: </label>
+                <input class="col-form-label" max="12" min="1" name="birthmonth" type="number">
+                <label class="col-form-label" for="colFormLabel">Año: </label>
+                <input class="col-form-label" max="2010" min="1960" name="birthyear" type="number">
+            </p>
+        </div>
+
+        <!-- Facultad -->
+        <div class="text-left" style="margin: 20px">
+            <p style="margin-left: 520px">
+                <label class="col-form-label" for="colFormLabel">Facultad</label>
+                <select class="text-center" id="Facultad" name="faculty">
+                    <option value="Ciencias de la Salud">Ciencias de la Salud</option>
+                    <option value="Ingeniería, Arquitectura y Diseño">Ingeniería, Arquitectura y Diseño</option>
+                    <option value="Ciencias Administrativas, Marítima y Portuaria">Ciencias Administrativas, Marítima y
+                        Portuaria
+                    </option>
+                    <option value="Hotelería Gastronomía y Turismo">Hotelería Gastronomía y Turismo</option>
+                </select>
+            </p>
+        </div>
+
+        <!-- Ambit Example -->
+        <div class="text-left" style="margin: 20px">
+            <p style="margin-left: 520px">
+                <label class="col-form-label" for="colFormLabel">Tipo de usuario</label>
+                <select class="text-center" id="Ambit" name="ambit">
+                    <option value="student">Estudiante</option>
+                    <option value="teacher">Profesor</option>
+                    <option value="admin">Administrador</option>
+                </select>
+            </p>
+        </div>
+
+        <div class="text-left" style="margin: 20px">
+            <p style="margin-left: 650px">
+                <!-- Si ya registras por primera vez -->
+                <button class="btn btn-primary" type="submit">Registrar</button>
+            </p>
+        </div>
+    </form>
+
+    <form action="/acceso">
+        <div class="text-center" style="margin: 20px">
+            <label>Ya tienes sesión?: </label>
+            <button class="btn btn-primary" type="submit">Acceder</button>
+        </div>
+    </form>
+
+
+    <script src="/static/js/bootstrap.js"></script>
+
+</body>
+
+</html>
