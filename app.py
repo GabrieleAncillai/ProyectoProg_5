@@ -151,7 +151,7 @@ def InsertAccount():
 @app.route("/RemoveAccount")
 def removeAccount():
     # Deleting a Task with various references
-    ID = request.values.get("ID")
+    ID = request.values.get("AccountID")
     Accounts.remove({"_id": ObjectId(ID)})
     return redirect("/home")
 
