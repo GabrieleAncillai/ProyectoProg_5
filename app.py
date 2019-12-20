@@ -1,5 +1,4 @@
 # Integrantes del grupo:
-# Rene de Leon 2-713-1724
 # Gabriele Ancillai  YB0415159
 # Juan García 093926238
 
@@ -96,13 +95,16 @@ def logout():
 # ------------------------------- Componentes de tabla de opciones superior -------------------------------
 @app.route("/home", methods=['GET'])  # Home
 def home():
-    MyUser = list(Users.find({"username": session['username'], "password": app.secret_key}))
+    MyUser = list(Users.find(
+        {"username": session['username'], "password": app.secret_key}))
     for user in MyUser:
-        AllAccounts = list(Accounts.find({ "UserID": user["username"] + user["password"] }))
+        AllAccounts = list(Accounts.find(
+            {"UserID": user["username"] + user["password"]}))
 
     print(AllAccounts)
-    
+
     return render_template('home.html', AllAccounts=AllAccounts, MyUser=MyUser)
+
 
 @app.route("/EditAccount")
 def EditAccount():
@@ -112,11 +114,18 @@ def EditAccount():
     print("item: ", Item)
     return render_template('EditAccount.html', Item=Item, AccountID=AccountID)
 
+@app.route("/AddAccount")
+def AddAccount():
+    AccountID = request.values.get("AccountID")
+    print("AccountID: ", AccountID)
+    return render_template('EditAccount.html', AccountID=AccountID)
+
 # ------------------------------- ACCOUNTS ACTIONS -------------------------------
 
-@app.route("/AddAccount", methods=['POST'])
-def AddAccount():
-    # Adding an Account
+
+@app.route("/InsertAccount", methods=['POST'])
+def InsertAccount():
+    # Inserting an Account
     title = request.values.get("title")
     details = request.values.get("details")
     image = request.values.get("image")
@@ -147,6 +156,7 @@ def removeAccount():
     Accounts.remove({"_id": ObjectId(ID)})
     return redirect("/home")
 
+
 @app.route("/UpdateAccount", methods=['POST'])
 def UpdateAccount():
     # Updating a Task with various references
@@ -174,13 +184,14 @@ def UpdateAccount():
     )
     return redirect("/home")
 
+
 @app.route("/SearchAccount", methods=['GET'])
 def searchEvent():
     # Searching a Task with various references
     key = request.values.get("key")
     refer = request.values.get("refer")
     AllAccounts = Accounts.find({refer: key})
-    return render_template('home.html', AllAccounts=AllAccounts, title=title)
+    return render_template('home.html', AllAccounts=AllAccounts)
 
 
 if __name__ == "__main__":
