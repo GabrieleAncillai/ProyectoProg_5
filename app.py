@@ -106,6 +106,11 @@ def home():
     return render_template('home.html', AllAccounts=AllAccounts, MyUser=MyUser)
 
 
+@app.route("/AddAccount")
+def AddAccount():
+    return render_template('AddAccount.html')
+
+
 @app.route("/EditAccount")
 def EditAccount():
     AccountID = request.values.get("AccountID")
@@ -113,12 +118,6 @@ def EditAccount():
     print("AccountID: ", AccountID)
     print("item: ", Item)
     return render_template('EditAccount.html', Item=Item, AccountID=AccountID)
-
-@app.route("/AddAccount")
-def AddAccount():
-    AccountID = request.values.get("AccountID")
-    print("AccountID: ", AccountID)
-    return render_template('EditAccount.html', AccountID=AccountID)
 
 # ------------------------------- ACCOUNTS ACTIONS -------------------------------
 
@@ -133,7 +132,7 @@ def InsertAccount():
     username = request.values.get("username")
     mail = request.values.get("mail")
     password = request.values.get("password")
-    UserID = request.values.get("UserID")
+    UserID = session["username"] + app.secret_key
 
     Accounts.insert({
         "title": title,
